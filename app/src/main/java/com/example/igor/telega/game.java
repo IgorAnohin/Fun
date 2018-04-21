@@ -1,5 +1,8 @@
 package com.example.igor.telega;
 
+import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,12 +13,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Random;
+import java.util.Timer;
 
 public class game extends AppCompatActivity {
 
     private static final int WIDTH_BUTTON = 120;
     private static final int HEIGHT_BUTTON = 120;
     private static final int MIN_MARGIN = 20;
+    private static String[] buttonState = {"CLICK", "EMPTY", "NO"};
+
+
+    private int count;
+    private int countCLICK;
 
     Boolean end;
     RelativeLayout lr;
@@ -34,10 +43,11 @@ public class game extends AppCompatActivity {
             public void onGlobalLayout() {
                 // TODO Auto-generated method stub
                 init();
-                lr.getViewTreeObserver().removeGlobalOnLayoutListener(
-                        this);
+                lr.getViewTreeObserver().removeGlobalOnLayoutListener(this);
             }
         });
+
+
     }
 
     protected void init() {
@@ -62,8 +72,20 @@ public class game extends AppCompatActivity {
                 public void onClick(View view) {
                     RelativeLayout button_layout = (RelativeLayout) view.getParent();
                     if (button_layout != null) {
-                        create_buttons(height, width);
-                        button_layout.removeView(view);
+
+                        Button b = (Button) view;
+                        if (b.getText().equals(buttonState[0])) {
+                            count++;
+                            countCLICK--;
+                            create_buttons(height, width);
+                            button_layout.removeView(view);
+                        } else if (b.getText().equals(buttonState[2])) {
+                            Intent intent = new Intent();
+                            intent.putExtra("count", Integer.toString(count));
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+
                     }
                 }
             });
@@ -79,8 +101,11 @@ public class game extends AppCompatActivity {
 
             new_button.setBackgroundResource(R.drawable.telegram);
 
-            String phrase = (rand.nextInt(3) > 1) ? "CLICK" : "NO!!!";
-            new_button.setText(phrase);
+            int index = (countCLICK == 0) ? 0 : rand.nextInt(3);
+            if (index == 0) countCLICK++;
+
+            new_button.setText(buttonState[index]);
+
             layoutParams.setMargins(temp_w, temp_h, MIN_MARGIN, MIN_MARGIN);
             lr.addView(new_button, layoutParams);
             end = true;
