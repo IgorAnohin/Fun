@@ -20,8 +20,6 @@ public class game extends AppCompatActivity {
     private static final int WIDTH_BUTTON = 120;
     private static final int HEIGHT_BUTTON = 120;
     private static final int MIN_MARGIN = 20;
-    private static String[] buttonState = {"CLICK", "EMPTY", "NO"};
-
 
     private int count;
     private int countCLICK;
@@ -74,12 +72,12 @@ public class game extends AppCompatActivity {
                     if (button_layout != null) {
 
                         Button b = (Button) view;
-                        if (b.getText().equals(buttonState[0])) {
+                        if (b.getBackground().getConstantState().equals(getResources().getDrawable(R.drawable.telegram).getConstantState())) {
                             count++;
                             countCLICK--;
                             create_buttons(height, width);
                             button_layout.removeView(view);
-                        } else if (b.getText().equals(buttonState[2])) {
+                        } else if (!b.getBackground().getConstantState().equals(getResources().getDrawable(R.drawable.cicrcle_button).getConstantState())) {
                             Intent intent = new Intent();
                             intent.putExtra("count", Integer.toString(count));
                             setResult(RESULT_OK, intent);
@@ -99,12 +97,18 @@ public class game extends AppCompatActivity {
 
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams( WIDTH_BUTTON,HEIGHT_BUTTON);
 
-            new_button.setBackgroundResource(R.drawable.telegram);
-
             int index = (countCLICK == 0) ? 0 : rand.nextInt(3);
             if (index == 0) countCLICK++;
-
-            new_button.setText(buttonState[index]);
+            switch (index) {
+                case 0:
+                    new_button.setBackgroundResource(R.drawable.telegram);
+                    break;
+                case 1:
+                    new_button.setBackgroundResource(R.drawable.cicrcle_button);
+                    break;
+                default:
+                    new_button.setBackgroundResource(R.drawable.skype);
+            }
 
             layoutParams.setMargins(temp_w, temp_h, MIN_MARGIN, MIN_MARGIN);
             lr.addView(new_button, layoutParams);
