@@ -1,5 +1,8 @@
 package com.example.igor.telega;
 
+import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +19,7 @@ public class game extends AppCompatActivity {
     private static final int WIDTH_BUTTON = 120;
     private static final int HEIGHT_BUTTON = 120;
     private static final int MIN_MARGIN = 20;
+    private int count;
 
     Boolean end;
     RelativeLayout lr;
@@ -34,8 +38,7 @@ public class game extends AppCompatActivity {
             public void onGlobalLayout() {
                 // TODO Auto-generated method stub
                 init();
-                lr.getViewTreeObserver().removeGlobalOnLayoutListener(
-                        this);
+                lr.getViewTreeObserver().removeGlobalOnLayoutListener(this);
             }
         });
     }
@@ -62,8 +65,19 @@ public class game extends AppCompatActivity {
                 public void onClick(View view) {
                     RelativeLayout button_layout = (RelativeLayout) view.getParent();
                     if (button_layout != null) {
-                        create_buttons(height, width);
-                        button_layout.removeView(view);
+
+                        Button b = (Button) view;
+                        if (b.getText().equals("CLICK")) {
+                            count++;
+                            create_buttons(height, width);
+                            button_layout.removeView(view);
+                        } else {
+                            Intent intent = new Intent();
+                            intent.putExtra("count", Integer.toString(count));
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+
                     }
                 }
             });
