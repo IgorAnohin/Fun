@@ -13,13 +13,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Random;
+import java.util.Timer;
 
 public class game extends AppCompatActivity {
 
     private static final int WIDTH_BUTTON = 120;
     private static final int HEIGHT_BUTTON = 120;
     private static final int MIN_MARGIN = 20;
+    private static String[] buttonState = {"CLICK", "EMPTY", "NO"};
+
+
     private int count;
+    private int countCLICK;
 
     Boolean end;
     RelativeLayout lr;
@@ -41,6 +46,8 @@ public class game extends AppCompatActivity {
                 lr.getViewTreeObserver().removeGlobalOnLayoutListener(this);
             }
         });
+
+
     }
 
     protected void init() {
@@ -67,11 +74,12 @@ public class game extends AppCompatActivity {
                     if (button_layout != null) {
 
                         Button b = (Button) view;
-                        if (b.getText().equals("CLICK")) {
+                        if (b.getText().equals(buttonState[0])) {
                             count++;
+                            countCLICK--;
                             create_buttons(height, width);
                             button_layout.removeView(view);
-                        } else {
+                        } else if (b.getText().equals(buttonState[2])) {
                             Intent intent = new Intent();
                             intent.putExtra("count", Integer.toString(count));
                             setResult(RESULT_OK, intent);
@@ -93,8 +101,11 @@ public class game extends AppCompatActivity {
 
             new_button.setBackgroundResource(R.drawable.telegram);
 
-            String phrase = (rand.nextInt(3) > 1) ? "CLICK" : "NO!!!";
-            new_button.setText(phrase);
+            int index = (countCLICK == 0) ? 0 : rand.nextInt(3);
+            if (index == 0) countCLICK++;
+
+            new_button.setText(buttonState[index]);
+
             layoutParams.setMargins(temp_w, temp_h, MIN_MARGIN, MIN_MARGIN);
             lr.addView(new_button, layoutParams);
             end = true;
