@@ -2,6 +2,7 @@ package com.example.igor.telega;
 
 import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class game extends AppCompatActivity {
 
@@ -27,7 +30,7 @@ public class game extends AppCompatActivity {
 
     Boolean end;
     RelativeLayout lr;
-//    Handler h;
+    Handler h;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,33 +50,41 @@ public class game extends AppCompatActivity {
             }
         });
 
-
-
+        h = new  Handler() {
+            public void handleMessage(android.os.Message msg) {
+                create_buttons(lr.getHeight(), lr.getWidth());
+            }
+        };
     }
 
     protected void init() {
-        int a= lr.getHeight();
-        int b = lr.getWidth();
+        final int a= lr.getHeight();
+        final int b = lr.getWidth();
         Toast.makeText(this,""+a+" "+b,Toast.LENGTH_LONG).show();
         ( (TextView) findViewById(R.id.test_view) ).setText(a + " " + b);
         create_buttons(a,b);
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                h.sendEmptyMessage(1);
+            }
+        }, 1000, 1000);
 
     }
 
     private void create_buttons(final int height, final int width) {
         Random rand = new Random();
 
-        end = false;
         int i = 0;
         while (i++ < 2) {
             final Button new_button = new Button(this);
 
             new_button.setOnClickListener(new View.OnClickListener() {
-                @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                 @Override
                 public void onClick(final View view) {
                     RelativeLayout button_layout = (RelativeLayout) view.getParent();
-
 
                     if (button_layout != null) {
                         Button b = (Button) view;
@@ -83,7 +94,6 @@ public class game extends AppCompatActivity {
                             countCLICK--;
                             b.clearAnimation();
                             button_layout.removeView(view);
-                            create_buttons(height, width);
                         } else if (!b.getBackground().getConstantState().
                                 equals(getResources().getDrawable(R.drawable.blue_circle).getConstantState())) {
                             returnToMain();
@@ -96,14 +106,14 @@ public class game extends AppCompatActivity {
             });
 
 
-            int temp_w = rand.nextInt(width)-WIDTH_BUTTON-MIN_MARGIN;
+            int temp_w = rand.nextInt(width) - WIDTH_BUTTON - MIN_MARGIN;
             temp_w = temp_w < 0 ? MIN_MARGIN : temp_w;
 
-            int temp_h = rand.nextInt(height)-HEIGHT_BUTTON-MIN_MARGIN;
+            int temp_h = rand.nextInt(height) - HEIGHT_BUTTON - MIN_MARGIN;
             temp_h = temp_h < 0 ? MIN_MARGIN : temp_h;
 
             RelativeLayout.LayoutParams layoutParams =
-                    new RelativeLayout.LayoutParams(WIDTH_BUTTON,HEIGHT_BUTTON);
+                    new RelativeLayout.LayoutParams(WIDTH_BUTTON, HEIGHT_BUTTON);
 
             int index = (countCLICK == 0) ? 0 : rand.nextInt(3);
             if (index == 0) countCLICK++;
@@ -144,7 +154,6 @@ public class game extends AppCompatActivity {
             });
 
             new_button.startAnimation(anim);
-            end = true;
         }
     }
 
