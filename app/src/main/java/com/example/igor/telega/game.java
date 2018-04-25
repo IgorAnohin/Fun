@@ -1,19 +1,20 @@
 package com.example.igor.telega;
 
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Random;
-import java.util.Timer;
 
 public class game extends AppCompatActivity {
 
@@ -26,6 +27,7 @@ public class game extends AppCompatActivity {
 
     Boolean end;
     RelativeLayout lr;
+//    Handler h;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,7 @@ public class game extends AppCompatActivity {
         });
 
 
+
     }
 
     protected void init() {
@@ -63,27 +66,31 @@ public class game extends AppCompatActivity {
         end = false;
         int i = 0;
         while (i++ < 2) {
-            Button new_button = new Button(this);
+            final Button new_button = new Button(this);
 
             new_button.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                 @Override
-                public void onClick(View view) {
+                public void onClick(final View view) {
                     RelativeLayout button_layout = (RelativeLayout) view.getParent();
-                    if (button_layout != null) {
 
+
+                    if (button_layout != null) {
                         Button b = (Button) view;
-                        if (b.getBackground().getConstantState().equals(getResources().getDrawable(R.drawable.telegram).getConstantState())) {
+                        if (b.getBackground().getConstantState().equals
+                                (getResources().getDrawable(R.drawable.telegram).getConstantState())) {
                             count++;
                             countCLICK--;
-                            create_buttons(height, width);
+                            b.clearAnimation();
                             button_layout.removeView(view);
-                        } else if (!b.getBackground().getConstantState().equals(getResources().getDrawable(R.drawable.cicrcle_button).getConstantState())) {
-                            Intent intent = new Intent();
-                            intent.putExtra("count", Integer.toString(count));
-                            setResult(RESULT_OK, intent);
-                            finish();
+                            create_buttons(height, width);
+                        } else if (!b.getBackground().getConstantState().
+                                equals(getResources().getDrawable(R.drawable.blue_circle).getConstantState())) {
+                            returnToMain();
+                        } else {
+                            b.clearAnimation();
+                            button_layout.removeView(view);
                         }
-
                     }
                 }
             });
@@ -95,24 +102,57 @@ public class game extends AppCompatActivity {
             int temp_h = rand.nextInt(height)-HEIGHT_BUTTON-MIN_MARGIN;
             temp_h = temp_h < 0 ? MIN_MARGIN : temp_h;
 
-            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams( WIDTH_BUTTON,HEIGHT_BUTTON);
+            RelativeLayout.LayoutParams layoutParams =
+                    new RelativeLayout.LayoutParams(WIDTH_BUTTON,HEIGHT_BUTTON);
 
             int index = (countCLICK == 0) ? 0 : rand.nextInt(3);
             if (index == 0) countCLICK++;
+
             switch (index) {
                 case 0:
                     new_button.setBackgroundResource(R.drawable.telegram);
                     break;
                 case 1:
-                    new_button.setBackgroundResource(R.drawable.cicrcle_button);
+                    new_button.setBackgroundResource(R.drawable.blue_circle);
                     break;
                 default:
                     new_button.setBackgroundResource(R.drawable.skype);
             }
 
+
             layoutParams.setMargins(temp_w, temp_h, MIN_MARGIN, MIN_MARGIN);
             lr.addView(new_button, layoutParams);
+
+            final Animation anim = AnimationUtils.loadAnimation(new_button.getContext(), R.anim.first);
+            anim.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                    if (new_button.getBackground().getConstantState().equals
+                            (getResources().getDrawable(R.drawable.telegram).getConstantState()))
+                        returnToMain();
+                }
+            });
+
+            new_button.startAnimation(anim);
             end = true;
         }
     }
+
+    private void returnToMain() {
+        Intent intent = new Intent();
+        intent.putExtra("count", Integer.toString(count));
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
 }
