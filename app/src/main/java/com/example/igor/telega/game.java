@@ -59,10 +59,6 @@ public class game extends AppCompatActivity {
     }
 
     protected void init() {
-        final int a= lr.getHeight();
-        final int b = lr.getWidth();
-        Toast.makeText(this,""+a+" "+b,Toast.LENGTH_LONG).show();
-        ( (TextView) findViewById(R.id.test_view) ).setText(a + " " + b);
         create_buttons(lr.getHeight(), lr.getWidth());
 
         Timer timer = new Timer();
