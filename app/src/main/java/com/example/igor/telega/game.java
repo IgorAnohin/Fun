@@ -24,6 +24,7 @@ public class game extends AppCompatActivity {
     private static final int WIDTH_BUTTON = 120;
     private static final int HEIGHT_BUTTON = 120;
     private static final int MIN_MARGIN = 20;
+    private static final int [] bad_pictures = {R.drawable.google, R.drawable.skype, R.drawable.viber};
 
     private int count;
     private int countCLICK;
@@ -62,7 +63,7 @@ public class game extends AppCompatActivity {
         final int b = lr.getWidth();
         Toast.makeText(this,""+a+" "+b,Toast.LENGTH_LONG).show();
         ( (TextView) findViewById(R.id.test_view) ).setText(a + " " + b);
-        create_buttons(a,b);
+        create_buttons(lr.getHeight(), lr.getWidth());
 
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -126,7 +127,7 @@ public class game extends AppCompatActivity {
                     new_button.setBackgroundResource(R.drawable.blue_circle);
                     break;
                 default:
-                    new_button.setBackgroundResource(R.drawable.skype);
+                    new_button.setBackgroundResource(bad_pictures[rand.nextInt(rand.nextInt(3))]);
             }
 
 
