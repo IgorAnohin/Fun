@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">Telega</string>
-    <string name="rule">CLICK!</string>
-    <string name="bscore">Best score:</string>
-    <string name="cscore">Current score:</string>
-    <string name="cur">Current</string>
-    <string name="best">Best</string>
-    <string name="fun">HAVE FUN! :)</string>
+    <string name="rule">ТЫК!</string>
+    <string name="bscore">Лучший счёт:</string>
+    <string name="cscore">Текущий счёт:</string>
+    <string name="cur">Текущий</string>
+    <string name="best">Лучший</string>
+    <string name="fun">Веселитесь! :)</string>
 </resources>
