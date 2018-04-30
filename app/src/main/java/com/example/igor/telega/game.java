@@ -11,6 +11,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.Random;
 import java.util.Timer;
@@ -31,6 +32,7 @@ public class game extends AppCompatActivity {
     RelativeLayout lr;
     Handler h;
     Timer mainTimer;
+    TextView counter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,7 @@ public class game extends AppCompatActivity {
         setContentView(R.layout.activity_game);
 
         lr = (RelativeLayout) findViewById(R.id.buttons_filed);
+        counter = findViewById(R.id.counter);
 
         ViewTreeObserver observer = lr.getViewTreeObserver();
         observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -64,10 +67,9 @@ public class game extends AppCompatActivity {
         mainTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                h.sendEmptyMessage(new Random().nextInt(3) + 2);
+                h.sendEmptyMessage(count/20 + new Random().nextInt(3) + 2);
             }
         }, 1000, 1000);
-
     }
 
     private void create_buttons(final int height, final int width, int numOfButtons) {
@@ -87,6 +89,7 @@ public class game extends AppCompatActivity {
                         if (b.getBackground().getConstantState().equals
                                 (getResources().getDrawable(R.drawable.telegram).getConstantState())) {
                             count++;
+                            showCount();
                             countCLICK--;
                             b.clearAnimation();
                             button_layout.removeView(view);
@@ -172,6 +175,20 @@ public class game extends AppCompatActivity {
             new_button.startAnimation(anim);
         }
     }
+
+    private void showCount() {
+//        Animation animation
+        counter.setVisibility(View.VISIBLE);
+        counter.setText(Integer.toString(count));
+        counter.startAnimation(AnimationUtils.loadAnimation(counter.getContext(), R.anim.counter));
+        counter.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                counter.setVisibility(View.INVISIBLE);
+            }
+        }, 300);
+    }
+
 
     private void returnToMain() {
         Intent intent = new Intent();
