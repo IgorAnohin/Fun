@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -32,6 +33,7 @@ public class game extends AppCompatActivity {
     Boolean end;
     RelativeLayout lr;
     Handler h;
+    Timer mainTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,29 +55,29 @@ public class game extends AppCompatActivity {
 
         h = new  Handler() {
             public void handleMessage(android.os.Message msg) {
-                create_buttons(lr.getHeight(), lr.getWidth());
+                create_buttons(lr.getHeight(), lr.getWidth(), msg.what);
             }
         };
     }
 
     protected void init() {
-        create_buttons(lr.getHeight(), lr.getWidth());
+        create_buttons(lr.getHeight(), lr.getWidth(), 2);
 
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
+        mainTimer = new Timer();
+        mainTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                h.sendEmptyMessage(1);
+                h.sendEmptyMessage(new Random().nextInt(3) + 2);
             }
         }, 1000, 1000);
 
     }
 
-    private void create_buttons(final int height, final int width) {
+    private void create_buttons(final int height, final int width, int numOfButtons) {
         Random rand = new Random();
 
         int i = 0;
-        while (i++ < 2) {
+        while (i++ < numOfButtons) {
             final Button new_button = new Button(this);
 
             new_button.setOnClickListener(new View.OnClickListener() {
@@ -123,7 +125,7 @@ public class game extends AppCompatActivity {
                     new_button.setBackgroundResource(R.drawable.blue_circle);
                     break;
                 default:
-                    new_button.setBackgroundResource(bad_pictures[rand.nextInt(rand.nextInt(3))]);
+                    new_button.setBackgroundResource(bad_pictures[rand.nextInt(3)]);
             }
 
 
@@ -145,9 +147,28 @@ public class game extends AppCompatActivity {
                 @Override
                 public void onAnimationRepeat(Animation animation) {
                     if (new_button.getBackground().getConstantState().equals
-                            (getResources().getDrawable(R.drawable.telegram).getConstantState()))
-                        returnToMain();
+                            (getResources().getDrawable(R.drawable.telegram).getConstantState())) {
+
+                        new_button.clearAnimation();
+                        mainTimer.cancel();
+                        final Animation end = new AlphaAnimation(0.0f, 1.0f);
+                        end.setDuration(100);
+                        end.setRepeatCount(-1);
+                        end.setRepeatMode(Animation.REVERSE);
+
+                        new_button.startAnimation(end);
+
+                        new_button.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                returnToMain();
+                            }
+                        }, 3000);
+
+                    }
+
                 }
+
             });
 
             new_button.startAnimation(anim);
