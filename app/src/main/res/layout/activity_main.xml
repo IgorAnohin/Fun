@@ -35,12 +35,26 @@
 
     <Button
         android:id="@+id/start_button"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="280dp"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:paddingTop="30dp"
+        android:layout_marginTop="250dp"
+        android:background="@drawable/telegram"
         android:paddingLeft="28dp"
-        android:background="@drawable/start"/>
+        android:textAlignment="gravity" />
+        <!--android:paddingTop="30dp" -->
+
+    <TextView
+        android:id="@+id/rule"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_alignBaseline="@+id/start_button"
+        android:layout_alignBottom="@+id/start_button"
+        android:layout_centerHorizontal="true"
+        android:text="@string/rule"
+        android:textAlignment="center"
+        android:textColor="#0000FF"
+        android:textSize="25sp"
+        android:visibility="invisible" />
 
 </RelativeLayout>
