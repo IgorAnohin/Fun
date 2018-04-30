@@ -1,9 +1,7 @@
 package com.example.igor.telega;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Handler;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,8 +11,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Random;
 import java.util.Timer;
@@ -25,7 +21,8 @@ public class game extends AppCompatActivity {
     private static final int WIDTH_BUTTON = 120;
     private static final int HEIGHT_BUTTON = 120;
     private static final int MIN_MARGIN = 20;
-    private static final int [] bad_pictures = {R.drawable.google, R.drawable.skype, R.drawable.viber};
+    private static final int [] bad_pictures = {R.drawable.google, R.drawable.skype, R.drawable.viber,
+                                                R.drawable.rkn, R.drawable.amazon, R.drawable.instagram};
 
     private int count;
     private int countCLICK;
@@ -125,7 +122,7 @@ public class game extends AppCompatActivity {
                     new_button.setBackgroundResource(R.drawable.blue_circle);
                     break;
                 default:
-                    new_button.setBackgroundResource(bad_pictures[rand.nextInt(3)]);
+                    new_button.setBackgroundResource(bad_pictures[rand.nextInt(6)]);
             }
 
 
@@ -165,7 +162,8 @@ public class game extends AppCompatActivity {
                             }
                         }, 3000);
 
-                    }
+                    } else
+                        lr.removeView(new_button);
 
                 }
 
